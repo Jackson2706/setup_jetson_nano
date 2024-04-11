@@ -52,7 +52,7 @@ def postprocess_yolov5(output_data, confidence_threshold=0.15, nms_threshold=0.4
 # Load mô hình ONNX
 
 providers = ['CUDAExecutionProvider', 'CPUExecutionProvider'] if onnxruntime.get_device()=='GPU' else ['CPUExecutionProvider']
-session = onnxruntime.InferenceSession('weights/best.onnx', providers=providers)
+session = onnxruntime.InferenceSession('weights/best.onnx',providers=["CUDAExecutionProvider"])
 cap = cv2.VideoCapture(0)
 
 while True:
@@ -84,7 +84,7 @@ while True:
     input_data /= 255
     print(input_data.shape)
     start_time1 = time.time()
-    output_data = session.run([output_name], {input_name: input_data})[0]
+    output_data = session.run(None, {input_name: input_data})[0]
     execution_time2 = time.time() - start_time1
     print("Thời gian xử lý: {:.6f} giây".format(execution_time2))
 
