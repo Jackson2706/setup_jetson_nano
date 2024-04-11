@@ -3,6 +3,40 @@ import numpy as np
 import onnxruntime
 import cv2
 
+import cv2
+import numpy as np
+
+def letterbox(im, new_shape=(640, 640), color=(114, 114, 114)):
+    # Resize and pad image to new_shape while maintaining aspect ratio
+    h, w = im.shape[:2]  # current height, width
+    target_h, target_w = new_shape
+
+    # Calculate aspect ratio
+    aspect_ratio = min(target_w / w, target_h / h)
+
+    # Calculate new width and height
+    new_w = int(w * aspect_ratio)
+    new_h = int(h * aspect_ratio)
+
+    # Resize image
+    resized_im = cv2.resize(im, (new_w, new_h), interpolation=cv2.INTER_LINEAR)
+
+    # Create a blank canvas of the target size
+    canvas = np.full((target_h, target_w, 3), color, dtype=np.uint8)
+
+    # Calculate coordinates to paste resized image in the center
+    x_offset = (target_w - new_w) // 2
+    y_offset = (target_h - new_h) // 2
+
+    # Paste the resized image onto the canvas
+    canvas[y_offset:y_offset + new_h, x_offset:x_offset + new_w] = resized_im
+
+    return canvas
+
+# Example usage:
+# im = cv2.imread("image.jpg")
+# letterboxed_im = letterbox(im, new_shape=(640, 640), color=(114, 114, 114))
+
 names = {
   0: "normal",
   1: "drowsy",
@@ -71,7 +105,8 @@ while True:
 
 
     # Chuyển đổi kích thước và sắp xếp lại kênh màu
-    image_resized = cv2.resize(image, (640, 640))  # Thay đổi kích thước
+    # image_resized = cv2.resize(image, (640, 640))  # Thay đổi kích thước
+    image_resized = letterbox(image)
     image_resized = np.transpose(image_resized, (2, 0, 1))  # Sắp xếp lại các kênh màu
 
     # Chạy inference với ONNX Runtime
