@@ -8,7 +8,7 @@ class YOLOv5:
         self.classes = self.model.names
 
     def load_model(self, model_path):
-        model = torch.hub.load('ultralytics/yolov5', 'custom', path=model_path, force_reload=True)
+        model =  torch.hub.load('./yolov5', 'custom', source ='local', path=model_path,force_reload=True) ### The repo is stored locally
         return model
 
     def execute(self, frame):

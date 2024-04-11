@@ -4,7 +4,7 @@ from yolov5 import YOLOv5
 import config
 yolov5 = YOLOv5(model_path = config.MODEL_PATH)
 
-cap = cv2.VideoCapture("/home/jackson/Desktop/outsourcing/setup_jetson_nano/Tài xế người Trung Quốc ngủ gật khi đang lái xe....mp4")  # Use 0 for default camera, change to 1, 2, ... for other cameras
+cap = cv2.VideoCapture(0)  # Use 0 for default camera, change to 1, 2, ... for other cameras
 
 while cap.isOpened():
     ret, frame = cap.read()
