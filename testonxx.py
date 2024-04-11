@@ -43,7 +43,7 @@ names = {
   2: "drowsy#2",
   3: "yawning",
  }
-def postprocess_yolov5(output_data, confidence_threshold=0.15, nms_threshold=0.45):
+def postprocess_yolov5(output_data, confidence_threshold=0.25, nms_threshold=0.45):
     detections = []
     grid_size = output_data.shape[1]
 
@@ -87,7 +87,7 @@ def postprocess_yolov5(output_data, confidence_threshold=0.15, nms_threshold=0.4
 
 providers = ['CUDAExecutionProvider', 'CPUExecutionProvider'] if onnxruntime.get_device()=='GPU' else ['CPUExecutionProvider']
 session = onnxruntime.InferenceSession('weights/best.onnx',providers=["CUDAExecutionProvider"])
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture("Tài xế người Trung Quốc ngủ gật khi đang lái xe....mp4")
 
 while True:
     # Bắt đầu đo thời gian
@@ -97,7 +97,7 @@ while True:
     execution_time1 = time.time() - start_time
     print("Thời gian chụp ảnh: {:.6f} giây".format(execution_time1))
     # image = cv2.imread("image.jpeg")
-    image_draw = cv2.resize(image,(640,640))
+    image_draw = letterbox(image)
     # Load ảnh đầu vào
     # image = cv2.imread('image.jpeg')
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -108,7 +108,7 @@ while True:
     # image_resized = cv2.resize(image, (640, 640))  # Thay đổi kích thước
     image_resized = letterbox(image)
     image_resized = np.transpose(image_resized, (2, 0, 1))  # Sắp xếp lại các kênh màu
-
+    image_resized = np.ascontiguousarray(image_resized)
     # Chạy inference với ONNX Runtime
     input_name = session.get_inputs()[0].name
     output_name = session.get_outputs()[0].name
